@@ -5,10 +5,6 @@
   "description": "Seedit API JavaScript SDK",
   "homepage": "https://github.com/airyland/seedit",
   "author": "",
-  "maintainers": [
-    "",
-    ""
-  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/airyland/seedit.git"
