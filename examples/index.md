@@ -19,13 +19,12 @@ API.get('bbs/common_member',successCallback,errorCallback);
 ````javascript
 seajs.use('API', function(API) {
     var $ = jQuery;
-    $('#test1').click(function() {
+    $('#test1').click(function(e) {
+    e.preventDefault();
         $('#box1').empty();
         API.get('bbs/common_member', function(data) {
-            alert('成功啦')
             $('#box1').text(JSON.stringify(data, null, 4));
         }, function(error) {
-            alert('出错啦')
             $('#box1').text(JSON.stringify(error, null, 4));
         });
     });
@@ -33,7 +32,7 @@ seajs.use('API', function(API) {
 ````
 
 ## 用户登录 `POST`
-<input type="username" id="username" placeholder="用户名" value="airyland">
+<input type="username" id="username" placeholder="用户名" value="sdkfljsdlf">
 <input type="password" id="password" placeholder="密码">
 <br>
 <br>
@@ -51,6 +50,25 @@ seajs.use('API', function(API) {
                 $('#box2').text(JSON.stringify(data, null, 4));
             },function(data){
                  $('#box2').text(JSON.stringify(data, null, 4));
+        });
+        });
+    })(jQuery);
+});
+````
+
+
+## 退出登录 `delete`
+<a href="javascript:" id="test3">点我退出登录</a>
+<pre id="box3"></pre>
+
+````javascript
+seajs.use('API', function(API) {
+    (function($) {
+        $('#test3').click(function() {
+            API.del('ucenter/login', function(data) {
+                $('#box3').text(JSON.stringify(data, null, 4));
+            },function(data){
+                $('#box3').text(JSON.stringify(data, null, 4));
         });
         });
     })(jQuery);
