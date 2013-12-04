@@ -101,7 +101,7 @@ define(function (require, exports, module) {
             if (value.toLowerCase() !== 'get') {
                 options.type = 'POST';
                 // set document.domain
-                document.domain = getDoamin();
+                document.domain = getDomain();
             }
             _request(options, successCallback, errorCallback);
         }
