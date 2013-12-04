@@ -106,7 +106,7 @@ define(function (require, exports, module) {
 
         return obj;
     };
-    // get commmon API base
+    // get common API base
     var baseURL = (function () {
             return (window.seedit && seedit.CONFIG.APIBaseURL) ? seedit.CONFIG.APIBaseURL : 'http://common.seedit.com/';
         })(),
@@ -154,7 +154,7 @@ define(function (require, exports, module) {
             }
             // final request
             $.ajax(defaultOpt);
-        }
+        };
 
     $.each(_method, function (index, value) {
         API[value.toLowerCase()] = function (api, option, successCallback, errorCallback, dataType) {
@@ -167,7 +167,7 @@ define(function (require, exports, module) {
                 successCallback = option;
             } else {
                 // deparms the querystring
-                if(typeof option ==='string'){
+                if (typeof option === 'string') {
                     option = deParams(option);
                 }
                 data = option;
