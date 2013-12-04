@@ -146,7 +146,10 @@ define(function (require, exports, module) {
             this[key] === undefined ? (this[key] = 1) : (this[key]++);
             // 同一接口不允许有同一个callback名字
             defaultOpt['jsonpCallback'] = key.replace('.', '_') + '_' + this[key];
-            if (defaultOpt.type !== 'get') {
+            if (!defaultOpt.type || $.inArray(defaultOpt.type.toLowerCase(), ['post', 'put', 'del', 'get']) === -1) {
+                defaultOpt.type = 'GET';
+            }
+            if (defaultOpt.type.toLowerCase() !== 'get') {
                 defaultOpt.type = 'POST';
                 defaultOpt.iframe = true;
                 defaultOpt.dataType = 'json';
