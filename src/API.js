@@ -13,6 +13,12 @@ define(function (require, exports, module) {
         require('gallery/json/1.0.3/json');
     }
     var API = {};
+    // get main domain
+    var getDomain = function () {
+        var hostArray = document.location.host.split('.')
+        hostArray.splice(0, 1);
+        return hostArray.join('.')
+    };
     // get commmon API base
     var baseURL = (function () {
             return (window.seedit && seedit.CONFIG.APIBaseURL) ? seedit.CONFIG.APIBaseURL : 'http://common.seedit.com/';
@@ -95,7 +101,7 @@ define(function (require, exports, module) {
             if (value.toLowerCase() !== 'get') {
                 options.type = 'POST';
                 // set document.domain
-                document.domain = 'seedit.com';
+                document.domain = getDoamin();
             }
             _request(options, successCallback, errorCallback);
         }
