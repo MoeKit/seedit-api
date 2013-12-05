@@ -111,6 +111,7 @@ define(function (require, exports, module) {
             return (window.seedit && seedit.CONFIG.APIBaseURL) ? seedit.CONFIG.APIBaseURL : 'http://common.seedit.com/';
         })(),
         _getURL = function (name, type) {
+            if(name.indexOf('http')!==-1) return name;
             return name.indexOf('.') > 0 ? baseURL + name : baseURL + name + '.' + type;
         },
         _method = ['GET', 'POST', 'PUT', 'DEL'],
