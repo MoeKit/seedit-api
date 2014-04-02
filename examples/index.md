@@ -14,7 +14,7 @@
 
 下面代码很长，但请求相关只有一句
 ```javascript
-API.get('bbs/common_member',successCallback,errorCallback);
+API.get('http://common.seedit.com/bbs/common_member.jsonp',successCallback,errorCallback);
 ```
 ````javascript
 seajs.use('API', function(API) {
@@ -22,7 +22,7 @@ seajs.use('API', function(API) {
     $('#test1').click(function(e) {
     e.preventDefault();
         $('#box1').empty();
-        API.get('bbs/common_member', function(data) {
+        API.get('http://common.seedit.com/bbs/common_member.jsonp', function(data) {
             $('#box1').text(JSON.stringify(data, null, 4));
         }, function(error) {
             $('#box1').text(JSON.stringify(error, null, 4));

@@ -3,10 +3,10 @@
  * @todo setting API for main domain
  * @todo add test cases
  */
-define("moe/API/0.0.2/API-debug", [ "seedit/iframeAjax/0.0.1/iframeAjax-debug", "gallery/json/1.0.3/json-debug" ], function(require, exports, module) {
+define("moe/API/0.0.3/API-debug", [ "moe/iframeAjax/0.0.2/iframeAjax-debug", "gallery/json/1.0.3/json-debug" ], function(require, exports, module) {
     var $ = jQuery;
     // require iframeTransport for cross-domain use
-    require("seedit/iframeAjax/0.0.1/iframeAjax-debug");
+    require("moe/iframeAjax/0.0.2/iframeAjax-debug");
     // for fucking ie
     if (!window.JSON) {
         require("gallery/json/1.0.3/json-debug");
@@ -122,7 +122,7 @@ define("moe/API/0.0.2/API-debug", [ "seedit/iframeAjax/0.0.1/iframeAjax-debug", 
         // 维护各个请求接口的次数
         this[key] === undefined ? this[key] = 1 : this[key]++;
         // 同一接口不允许有同一个callback名字
-        defaultOpt["jsonpCallback"] = key.replace(".", "_") + "_" + this[key];
+        defaultOpt["jsonpCallback"] = key.replace(/\./g, "_").replace(":", "").replace(/\//g, "") + "_" + this[key];
         if (!defaultOpt.type || $.inArray(defaultOpt.type.toLowerCase(), [ "post", "put", "del", "get" ]) === -1) {
             defaultOpt.type = "GET";
         }
