@@ -7,7 +7,7 @@
 define(function (require, exports, module) {
     var $ = jQuery;
     // require iframeTransport for cross-domain use
-    require('seedit/iframeAjax/0.0.1/iframeAjax');
+    require('moe/iframeAjax/0.0.2/iframeAjax');
     // for fucking ie
     if (!window.JSON) {
         require('gallery/json/1.0.3/json');
@@ -111,7 +111,7 @@ define(function (require, exports, module) {
             return (window.seedit && seedit.CONFIG.APIBaseURL) ? seedit.CONFIG.APIBaseURL : 'http://common.seedit.com/';
         })(),
         _getURL = function (name, type) {
-            if(name.indexOf('http')!==-1) return name;
+            if (name.indexOf('http') !== -1) return name;
             return name.indexOf('.') > 0 ? baseURL + name : baseURL + name + '.' + type;
         },
         _method = ['GET', 'POST', 'PUT', 'DEL'],
@@ -195,7 +195,12 @@ define(function (require, exports, module) {
             if (value.toLowerCase() !== 'get') {
                 options.type = 'POST';
                 // set document.domain
+                var domain = getDomain();
+                if (!domain) {
+                    alert('必须在生产环境或者本地绑定HOST使用');
+                }
                 document.domain = getDomain();
+
             }
             _request(options, successCallback, errorCallback);
         }

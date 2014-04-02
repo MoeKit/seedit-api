@@ -3,7 +3,7 @@
  * @todo setting API for main domain
  * @todo add test cases
  */
-define("seedit/API/0.0.1/API-debug", [ "seedit/iframeAjax/0.0.1/iframeAjax-debug", "gallery/json/1.0.3/json-debug" ], function(require, exports, module) {
+define("moe/API/0.0.2/API-debug", [ "seedit/iframeAjax/0.0.1/iframeAjax-debug", "gallery/json/1.0.3/json-debug" ], function(require, exports, module) {
     var $ = jQuery;
     // require iframeTransport for cross-domain use
     require("seedit/iframeAjax/0.0.1/iframeAjax-debug");
@@ -168,6 +168,10 @@ define("seedit/API/0.0.1/API-debug", [ "seedit/iframeAjax/0.0.1/iframeAjax-debug
             if (value.toLowerCase() !== "get") {
                 options.type = "POST";
                 // set document.domain
+                var domain = getDomain();
+                if (!domain) {
+                    alert("必须在生产环境或者本地绑定HOST使用");
+                }
                 document.domain = getDomain();
             }
             _request(options, successCallback, errorCallback);

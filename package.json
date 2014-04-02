@@ -1,7 +1,7 @@
 {
-  "family": "seedit",
+  "family": "moe",
   "name": "API",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Seedit API JavaScript SDK",
   "homepage": "https://github.com/airyland/seedit",
   "author": "",
