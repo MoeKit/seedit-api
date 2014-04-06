@@ -22,7 +22,7 @@
 
 `API`有且只有`4`个方法。
 
-### API.verb <em>function</em>
+### API.verb(API,[data],successCallback,errorCallback) <em>function</em>
 
 
 verb为`REST`基本的四个方法:
