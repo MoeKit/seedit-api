@@ -2,6 +2,7 @@
  * This is for private usage.
  * @todo setting API for main domain
  * @todo add test cases
+ * @todo add events support
  */
 
 define(function (require, exports, module) {
