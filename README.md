@@ -22,7 +22,9 @@
 
 `API`有且只有`4`个方法。
 
-### API.verb <em>function(API,data,successCallback,errorCallback)</em>
+
+### API.verb(API,[data],successCallback,errorCallback) <em>function</em>
+
 
 
 verb为`REST`基本的四个方法:
@@ -81,6 +83,7 @@ API.get('bbs/common_member',function(data){
 });
 ```
 
+
 ## 附加，
 
 公用`jQuery和seajs`地址
@@ -101,4 +104,5 @@ API.get('bbs/common_member',function(data){
         }
     });
 ```
+
 
