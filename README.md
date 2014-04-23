@@ -22,7 +22,7 @@
 
 `API`有且只有`4`个方法。
 
-### API.verb <em>function</em>
+### API.verb <em>function(API,data,successCallback,errorCallback)</em>
 
 
 verb为`REST`基本的四个方法:
@@ -80,3 +80,25 @@ API.get('bbs/common_member',function(data){
     console.log('oops!'+data.error_message);
 });
 ```
+
+## 附加，
+
+公用`jQuery和seajs`地址
+
+`http://scdn.bozhong.com/source/common/js/jquery.min.js`
+
+---
+
+`seajs`路径配置
+
+```javascript
+ seajs.config({
+        paths: {
+            seedit: 'http://assets.spmjs.org/seedit',
+            arale: 'http://static.alipayobjects.com/arale',
+            gallery: 'http://static.alipayobjects.com/gallery',
+            moe: 'http://scdn.bozhong.com/source/moe'
+        }
+    });
+```
+
