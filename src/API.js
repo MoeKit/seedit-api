@@ -15,7 +15,7 @@ define(function (require, exports, module) {
     var API = {};
     // get main domain
     var getDomain = function () {
-        var hostArray = document.location.host.split('.')
+        var hostArray = document.location.host.split('.');
         hostArray.splice(0, 1);
         return hostArray.join('.')
     };
@@ -196,10 +196,11 @@ define(function (require, exports, module) {
                 options.type = 'POST';
                 // set document.domain
                 var domain = getDomain();
-                if (!domain) {
+                if (!domain || /^\d+(.*?)\d+$/.test(domain)) {
                     alert('必须在生产环境或者本地绑定HOST使用');
+                    return;
                 }
-                document.domain = getDomain();
+                document.domain = domain;
 
             }
             _request(options, successCallback, errorCallback);
