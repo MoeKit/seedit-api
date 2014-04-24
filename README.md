@@ -1,4 +1,4 @@
-# API
+# API文档
 
 ---
 
@@ -88,7 +88,7 @@ API.get('bbs/common_member',function(data){
 ```
 
 
-## 附加，
+## 附加
 
 公用`jQuery和seajs`地址
 
