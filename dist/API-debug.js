@@ -2,8 +2,9 @@
  * This is for private usage.
  * @todo setting API for main domain
  * @todo add test cases
+ * @todo add events support
  */
-define("moe/API/0.0.3/API-debug", [ "moe/iframeAjax/0.0.2/iframeAjax-debug", "gallery/json/1.0.3/json-debug" ], function(require, exports, module) {
+define("moe/API/0.0.4/API-debug", [ "moe/iframeAjax/0.0.2/iframeAjax-debug", "gallery/json/1.0.3/json-debug" ], function(require, exports, module) {
     var $ = jQuery;
     // require iframeTransport for cross-domain use
     require("moe/iframeAjax/0.0.2/iframeAjax-debug");
@@ -92,7 +93,7 @@ define("moe/API/0.0.3/API-debug", [ "moe/iframeAjax/0.0.2/iframeAjax-debug", "ga
     var baseURL = function() {
         return window.seedit && seedit.CONFIG.APIBaseURL ? seedit.CONFIG.APIBaseURL : "http://common.seedit.com/";
     }(), _getURL = function(name, type) {
-        if (name.indexOf("http") !== -1) return name;
+        if (name.indexOf("http") !== -1) return name.replace(".json", ".jsonp").replace("jsonpp", "jsonp");
         return name.indexOf(".") > 0 ? baseURL + name : baseURL + name + "." + type;
     }, _method = [ "GET", "POST", "PUT", "DEL" ], _request = function(options, successCallback, errorCallback) {
         var defaultOpt = {
@@ -105,7 +106,7 @@ define("moe/API/0.0.3/API-debug", [ "moe/iframeAjax/0.0.2/iframeAjax-debug", "ga
             jsonpCallback: "request",
             success: function(data) {
                 // failure callback
-                // 对于API V2,错误误为0外的都发生了请求错误 
+                // 对于API V2,错误值为0外的都发生了请求错误
                 if (data["error_code"] && data["error_code"] !== 0) {
                     errorCallback && errorCallback.call(this, data);
                 } else {
@@ -134,6 +135,15 @@ define("moe/API/0.0.3/API-debug", [ "moe/iframeAjax/0.0.2/iframeAjax-debug", "ga
         }
         // final request
         $.ajax(defaultOpt);
+    };
+    // API config
+    API.config = function(option) {
+        if ($.isPlainObject(option) && option.baseAPIUrl) {
+            baseURL = option.baseAPIUrl;
+        }
+        if (option === "baseAPIUrl") {
+            return baseURL;
+        }
     };
     $.each(_method, function(index, value) {
         API[value.toLowerCase()] = function(api, option, successCallback, errorCallback, dataType) {
@@ -169,10 +179,11 @@ define("moe/API/0.0.3/API-debug", [ "moe/iframeAjax/0.0.2/iframeAjax-debug", "ga
                 options.type = "POST";
                 // set document.domain
                 var domain = getDomain();
-                if (!domain) {
+                if (!domain || /^\d+(.*?)\d+$/.test(domain)) {
                     alert("必须在生产环境或者本地绑定HOST使用");
+                    return;
                 }
-                document.domain = getDomain();
+                document.domain = domain;
             }
             _request(options, successCallback, errorCallback);
         };

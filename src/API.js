@@ -107,12 +107,14 @@ define(function (require, exports, module) {
 
         return obj;
     };
+
+
     // get common API base
     var baseURL = (function () {
             return (window.seedit && seedit.CONFIG.APIBaseURL) ? seedit.CONFIG.APIBaseURL : 'http://common.seedit.com/';
         })(),
         _getURL = function (name, type) {
-            if (name.indexOf('http') !== -1) return name.replace('.json','.jsonp');
+            if (name.indexOf('http') !== -1) return name.replace('.json', '.jsonp').replace('jsonpp', 'jsonp');
             return name.indexOf('.') > 0 ? baseURL + name : baseURL + name + '.' + type;
         },
         _method = ['GET', 'POST', 'PUT', 'DEL'],
@@ -127,7 +129,7 @@ define(function (require, exports, module) {
                 jsonpCallback: 'request',
                 success: function (data) {
                     // failure callback
-                    // 对于API V2,错误误为0外的都发生了请求错误 
+                    // 对于API V2,错误值为0外的都发生了请求错误
                     if (data['error_code'] && data['error_code'] !== 0) {
                         errorCallback && errorCallback.call(this, data);
                     } else {
@@ -160,6 +162,16 @@ define(function (require, exports, module) {
             // final request
             $.ajax(defaultOpt);
         };
+
+    // API config
+    API.config = function (option) {
+        if ($.isPlainObject(option) && option.baseAPIUrl) {
+            baseURL = option.baseAPIUrl;
+        }
+        if (option === 'baseAPIUrl') {
+            return baseURL;
+        }
+    };
 
     $.each(_method, function (index, value) {
         API[value.toLowerCase()] = function (api, option, successCallback, errorCallback, dataType) {
