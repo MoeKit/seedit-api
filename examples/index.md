@@ -17,7 +17,7 @@
 API.get('bbs/common_member',successCallback,errorCallback);
 ```
 ````javascript
-seajs.use('API', function(API) {
+seajs.use('index', function(API) {
     var $ = jQuery;
     $('#test1').click(function(e) {
     e.preventDefault();
@@ -40,7 +40,7 @@ seajs.use('API', function(API) {
 <pre id="box2"></pre>
 
 ````javascript
-seajs.use('API', function(API) {
+seajs.use('index', function(API) {
     (function($) {
         $('#test2').click(function() {
             API.post('ucenter/login', {
@@ -62,7 +62,7 @@ seajs.use('API', function(API) {
 <pre id="box3"></pre>
 
 ````javascript
-seajs.use('API', function(API) {
+seajs.use('index', function(API) {
     (function($) {
         $('#test3').click(function() {
             API.del('ucenter/login', function(data) {

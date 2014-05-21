@@ -1,7 +1,6 @@
 {
-  "family": "seedit",
   "name": "API",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Seedit API JavaScript SDK",
   "homepage": "https://github.com/airyland/seedit",
   "author": "",
@@ -15,9 +14,14 @@
   "keywords": [],
   "licenses": "MIT",
   "spm": {
-    "output": ["API.js"],
+    "main": "index.js",
     "alias": {},
     "devAlias": {},
-    "engines": {}
+    "engines": {},
+    "dependencies": {
+      "iframeAjax": "0.0.3",
+      "jquery": "1.8.3",
+      "json": "0.0.2"
+    }
   }
 }
