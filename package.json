@@ -22,6 +22,9 @@
       "iframeAjax": "0.0.3",
       "jquery": "1.8.3",
       "json": "0.0.2"
+    },
+    "devDependencies": {
+      "expect": "0.3.1"
     }
   }
 }
