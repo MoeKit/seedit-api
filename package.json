@@ -1,7 +1,6 @@
 {
-<<<<<<< HEAD
-  "name": "API",
-  "version": "0.0.2",
+  "name": "seedit-api",
+  "version": "0.0.3",
   "description": "Seedit API JavaScript SDK",
   "homepage": "https://github.com/airyland/seedit",
   "author": "",
@@ -25,30 +24,4 @@
       "json": "0.0.2"
     }
   }
-=======
-    "family": "moe",
-    "name": "API",
-    "version": "0.0.4",
-    "description": "Seedit API JavaScript SDK",
-    "homepage": "https://github.com/airyland/seedit",
-    "author": "",
-    "maintainers": [
-        "李政 <i@mao.li>"
-    ],
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/airyland/seedit.git"
-    },
-    "bugs": {
-        "url": ""
-    },
-    "keywords": [],
-    "licenses": "MIT",
-    "spm": {
-        "output": ["API.js"],
-        "alias": {},
-        "devAlias": {},
-        "engines": {}
-    }
->>>>>>> 8add09912a302b864d34a360761fd07614c8397a
 }

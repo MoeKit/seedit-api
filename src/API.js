@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-var $ = window.jQuery || require('jquery');
+var $ = jQuery || require('jquery');
 // require iframeTransport for cross-domain use
 require('iframeAjax');
 // for fucking ie
@@ -9,7 +8,7 @@ if (!window.JSON) {
 var API = {};
 // get main domain
 var getDomain = function() {
-    var hostArray = document.location.host.split('.')
+    var hostArray = document.location.host.split('.');
     hostArray.splice(0, 1);
     return hostArray.join('.')
 };
@@ -20,29 +19,6 @@ var deParams = function(params, coerce) {
         'true': !0,
         'false': !1,
         'null': null
-=======
-/**
- * This is for private usage.
- * @todo setting API for main domain
- * @todo add test cases
- * @todo add events support
- */
-
-define(function (require, exports, module) {
-    var $ = jQuery;
-    // require iframeTransport for cross-domain use
-    require('moe/iframeAjax/0.0.2/iframeAjax');
-    // for fucking ie
-    if (!window.JSON) {
-        require('gallery/json/1.0.3/json');
-    }
-    var API = {};
-    // get main domain
-    var getDomain = function () {
-        var hostArray = document.location.host.split('.');
-        hostArray.splice(0, 1);
-        return hostArray.join('.')
->>>>>>> 8add09912a302b864d34a360761fd07614c8397a
     };
     var decode = decodeURIComponent;
     // Iterate over all name=value pairs.
@@ -115,7 +91,6 @@ define(function (require, exports, module) {
                 }
             }
 
-<<<<<<< HEAD
         } else if (key) {
             // No value was defined, so set something meaningful.
             obj[key] = coerce ? undefined : '';
@@ -124,12 +99,13 @@ define(function (require, exports, module) {
 
     return obj;
 };
+
 // get common API base
 var baseURL = (function() {
     return (window.seedit && seedit.CONFIG.APIBaseURL) ? seedit.CONFIG.APIBaseURL : 'http://common.seedit.com/';
 })(),
     _getURL = function(name, type) {
-        if (name.indexOf('http') !== -1) return name;
+        if (name.indexOf('http') !== -1) return name.replace('.json', '.jsonp').replace('jsonpp', 'jsonp');
         return name.indexOf('.') > 0 ? baseURL + name : baseURL + name + '.' + type;
     },
     _method = ['GET', 'POST', 'PUT', 'DEL'],
@@ -144,7 +120,7 @@ var baseURL = (function() {
             jsonpCallback: 'request',
             success: function(data) {
                 // failure callback
-                // 对于API V2,错误误为0外的都发生了请求错误 
+                // 对于API V2,错误值为0外的都发生了请求错误
                 if (data['error_code'] && data['error_code'] !== 0) {
                     errorCallback && errorCallback.call(this, data);
                 } else {
@@ -155,61 +131,6 @@ var baseURL = (function() {
             error: function(a, b, c) {
                 //alert(JSON.stringify(a),JSON.stringify(b));
                 // @todo
-=======
-        return obj;
-    };
-
-
-    // get common API base
-    var baseURL = (function () {
-            return (window.seedit && seedit.CONFIG.APIBaseURL) ? seedit.CONFIG.APIBaseURL : 'http://common.seedit.com/';
-        })(),
-        _getURL = function (name, type) {
-            if (name.indexOf('http') !== -1) return name.replace('.json', '.jsonp').replace('jsonpp', 'jsonp');
-            return name.indexOf('.') > 0 ? baseURL + name : baseURL + name + '.' + type;
-        },
-        _method = ['GET', 'POST', 'PUT', 'DEL'],
-        _request = function (options, successCallback, errorCallback) {
-            var defaultOpt = {
-                type: 'get',
-                dataType: 'jsonp',
-                data: {
-                    __method: 'GET'
-                },
-                jsonp: '__c',
-                jsonpCallback: 'request',
-                success: function (data) {
-                    // failure callback
-                    // 对于API V2,错误值为0外的都发生了请求错误
-                    if (data['error_code'] && data['error_code'] !== 0) {
-                        errorCallback && errorCallback.call(this, data);
-                    } else {
-                        // success callback 
-                        successCallback && successCallback.call(this, data);
-                    }
-                },
-                error: function (a, b, c) {
-                    //alert(JSON.stringify(a),JSON.stringify(b));
-                    // @todo
-                }
-            };
-            options.url = _getURL(options['api'], options['dataType']);
-            $.extend(defaultOpt, options);
-            var key = options['api'].replace('/', '_') + '_' + options['data']['__method'];
-            delete options['api'];
-            // 维护各个请求接口的次数
-            this[key] === undefined ? (this[key] = 1) : (this[key]++);
-            // 同一接口不允许有同一个callback名字
-            defaultOpt['jsonpCallback'] = key.replace(/\./g, '_').replace(':', '').replace(/\//g, '') + '_' + this[key];
-            if (!defaultOpt.type || $.inArray(defaultOpt.type.toLowerCase(), ['post', 'put', 'del', 'get']) === -1) {
-                defaultOpt.type = 'GET';
-            }
-            if (defaultOpt.type.toLowerCase() !== 'get') {
-                defaultOpt.type = 'POST';
-                defaultOpt.iframe = true;
-                defaultOpt.dataType = 'json';
-                defaultOpt.url = _getURL(defaultOpt['api'], 'iframe');
->>>>>>> 8add09912a302b864d34a360761fd07614c8397a
             }
         };
         options.url = _getURL(options['api'], options['dataType']);
@@ -219,7 +140,7 @@ var baseURL = (function() {
         // 维护各个请求接口的次数
         this[key] === undefined ? (this[key] = 1) : (this[key]++);
         // 同一接口不允许有同一个callback名字
-        defaultOpt['jsonpCallback'] = key.replace('.', '_') + '_' + this[key];
+        defaultOpt['jsonpCallback'] = key.replace(/\./g, '_').replace(':', '').replace(/\//g, '') + '_' + this[key];
         if (!defaultOpt.type || $.inArray(defaultOpt.type.toLowerCase(), ['post', 'put', 'del', 'get']) === -1) {
             defaultOpt.type = 'GET';
         }
@@ -233,7 +154,16 @@ var baseURL = (function() {
         $.ajax(defaultOpt);
     };
 
-<<<<<<< HEAD
+// API config
+API.config = function(option) {
+    if ($.isPlainObject(option) && option.baseAPIUrl) {
+        baseURL = option.baseAPIUrl;
+    }
+    if (option === 'baseAPIUrl') {
+        return baseURL;
+    }
+};
+
 $.each(_method, function(index, value) {
     API[value.toLowerCase()] = function(api, option, successCallback, errorCallback, dataType) {
         var data = {};
@@ -241,33 +171,6 @@ $.each(_method, function(index, value) {
         if (typeof option === 'function') {
             if (typeof successCallback === 'function') {
                 var errorCallback = successCallback;
-=======
-    // API config
-    API.config = function (option) {
-        if ($.isPlainObject(option) && option.baseAPIUrl) {
-            baseURL = option.baseAPIUrl;
-        }
-        if (option === 'baseAPIUrl') {
-            return baseURL;
-        }
-    };
-
-    $.each(_method, function (index, value) {
-        API[value.toLowerCase()] = function (api, option, successCallback, errorCallback, dataType) {
-            var data = {};
-            // 不带参数的参数顺序处理
-            if (typeof option === 'function') {
-                if (typeof successCallback === 'function') {
-                    var errorCallback = successCallback;
-                }
-                successCallback = option;
-            } else {
-                // deparms the querystring
-                if (typeof option === 'string') {
-                    option = deParams(option);
-                }
-                data = option;
->>>>>>> 8add09912a302b864d34a360761fd07614c8397a
             }
             successCallback = option;
         } else {
@@ -278,7 +181,6 @@ $.each(_method, function(index, value) {
             data = option;
         }
 
-<<<<<<< HEAD
         // 登录接口结束
         $.extend(data, {
             __method: (value === 'DEL') ? 'DELETE' : value
@@ -297,27 +199,15 @@ $.each(_method, function(index, value) {
         if (value.toLowerCase() !== 'get') {
             options.type = 'POST';
             // set document.domain
-            document.domain = getDomain();
+            var domain = getDomain();
+            if (!domain || /^\d+(.*?)\d+$/.test(domain)) {
+                alert('必须在生产环境或者本地绑定HOST使用');
+                return;
+            }
+            document.domain = domain;
+
         }
         _request(options, successCallback, errorCallback);
     }
 });
 module.exports = API;
-=======
-            if (value.toLowerCase() !== 'get') {
-                options.type = 'POST';
-                // set document.domain
-                var domain = getDomain();
-                if (!domain || /^\d+(.*?)\d+$/.test(domain)) {
-                    alert('必须在生产环境或者本地绑定HOST使用');
-                    return;
-                }
-                document.domain = domain;
-
-            }
-            _request(options, successCallback, errorCallback);
-        }
-    });
-    module.exports = API;
-});
->>>>>>> 8add09912a302b864d34a360761fd07614c8397a
