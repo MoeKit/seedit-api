@@ -17,8 +17,7 @@
 API.get('http://common.seedit.com/bbs/common_member.jsonp',successCallback,errorCallback);
 ```
 ````javascript
-seajs.use('index', function(API) {
-    var $ = jQuery;
+seajs.use(['jquery','index'], function($,API) {
     $('#test1').click(function(e) {
     e.preventDefault();
         $('#box1').empty();
@@ -40,8 +39,8 @@ seajs.use('index', function(API) {
 <pre id="box2"></pre>
 
 ````javascript
-seajs.use('index', function(API) {
-    (function($) {
+seajs.use(['jquery','index'], function($,API) {
+    
         $('#test2').click(function() {
             API.post('ucenter/login', {
                 username: $('#username').val(),
@@ -52,7 +51,7 @@ seajs.use('index', function(API) {
                  $('#box2').text(JSON.stringify(data, null, 4));
         });
         });
-    })(jQuery);
+  
 });
 ````
 
@@ -62,8 +61,8 @@ seajs.use('index', function(API) {
 <pre id="box3"></pre>
 
 ````javascript
-seajs.use('index', function(API) {
-    (function($) {
+seajs.use(['jquery','index'], function($,API) {
+ 
         $('#test3').click(function() {
             API.del('ucenter/login', function(data) {
                 $('#box3').text(JSON.stringify(data, null, 4));
@@ -71,6 +70,6 @@ seajs.use('index', function(API) {
                 $('#box3').text(JSON.stringify(data, null, 4));
         });
         });
-    })(jQuery);
+  
 });
 ````

@@ -1,4 +1,5 @@
-var $ = jQuery || require('jquery');
+var $ = window.jQuery || require('jquery');
+var config = require('seedit-config');
 // require iframeTransport for cross-domain use
 require('iframeAjax');
 // for fucking ie
@@ -7,13 +8,13 @@ if (!window.JSON) {
 }
 var API = {};
 // get main domain
-var getDomain = function() {
+var getDomain = function () {
     var hostArray = document.location.host.split('.');
     hostArray.splice(0, 1);
     return hostArray.join('.')
 };
 // deparms function
-var deParams = function(params, coerce) {
+var deParams = function (params, coerce) {
     var obj = {};
     var coerce_types = {
         'true': !0,
@@ -22,14 +23,14 @@ var deParams = function(params, coerce) {
     };
     var decode = decodeURIComponent;
     // Iterate over all name=value pairs.
-    $.each(params.replace(/\+/g, ' ').split('&'), function(j, v) {
+    $.each(params.replace(/\+/g, ' ').split('&'), function (j, v) {
         var param = v.split('='),
             key = decode(param[0]),
             val,
             cur = obj,
             i = 0,
-            // If key is more complex than 'foo', like 'a[]' or 'a[b][c]', split it
-            // into its component parts.
+        // If key is more complex than 'foo', like 'a[]' or 'a[b][c]', split it
+        // into its component parts.
             keys = key.split(']['),
             keys_last = keys.length - 1;
         // If the first keys part contains [ and the last ends with ], then []
@@ -53,9 +54,9 @@ var deParams = function(params, coerce) {
             // Coerce values.
             if (coerce) {
                 val = val && !isNaN(val) ? +val // number
-                : val === 'undefined' ? undefined // undefined
-                : coerce_types[val] !== undefined ? coerce_types[val] // true, false, null
-                : val; // string
+                    : val === 'undefined' ? undefined // undefined
+                    : coerce_types[val] !== undefined ? coerce_types[val] // true, false, null
+                    : val; // string
             }
             if (keys_last) {
                 // Complex key, build deep object structure based on a few rules:
@@ -101,15 +102,13 @@ var deParams = function(params, coerce) {
 };
 
 // get common API base
-var baseURL = (function() {
-    return (window.seedit && seedit.CONFIG.APIBaseURL) ? seedit.CONFIG.APIBaseURL : 'http://common.seedit.com/';
-})(),
-    _getURL = function(name, type) {
+var baseURL = config.get('commonAPI'),
+    _getURL = function (name, type) {
         if (name.indexOf('http') !== -1) return name.replace('.json', '.jsonp').replace('jsonpp', 'jsonp');
         return name.indexOf('.') > 0 ? baseURL + name : baseURL + name + '.' + type;
     },
     _method = ['GET', 'POST', 'PUT', 'DEL'],
-    _request = function(options, successCallback, errorCallback) {
+    _request = function (options, successCallback, errorCallback) {
         var defaultOpt = {
             type: 'get',
             dataType: 'jsonp',
@@ -118,7 +117,7 @@ var baseURL = (function() {
             },
             jsonp: '__c',
             jsonpCallback: 'request',
-            success: function(data) {
+            success: function (data) {
                 // failure callback
                 // 对于API V2,错误值为0外的都发生了请求错误
                 if (data['error_code'] && data['error_code'] !== 0) {
@@ -128,7 +127,7 @@ var baseURL = (function() {
                     successCallback && successCallback.call(this, data);
                 }
             },
-            error: function(a, b, c) {
+            error: function (a, b, c) {
                 //alert(JSON.stringify(a),JSON.stringify(b));
                 // @todo
             }
@@ -155,7 +154,7 @@ var baseURL = (function() {
     };
 
 // API config
-API.config = function(option) {
+API.config = function (option) {
     if ($.isPlainObject(option) && option.baseAPIUrl) {
         baseURL = option.baseAPIUrl;
     }
@@ -164,8 +163,8 @@ API.config = function(option) {
     }
 };
 
-$.each(_method, function(index, value) {
-    API[value.toLowerCase()] = function(api, option, successCallback, errorCallback, dataType) {
+$.each(_method, function (index, value) {
+    API[value.toLowerCase()] = function (api, option, successCallback, errorCallback, dataType) {
         var data = {};
         // 不带参数的参数顺序处理
         if (typeof option === 'function') {
