@@ -1,11 +1,15 @@
-var $ = window.jQuery || require('jquery');
+// event:timeout supported
+// 不带参数的处理
+var $ = require('jquery');
 var config = require('seedit-config');
+var APIScopes = ['common', 'huodong'];
+// deparms function
+var deParams = require('./deparams');
 // require iframeTransport for cross-domain use
 require('iframeAjax');
 // for fucking ie
-if (!window.JSON) {
-    require('json');
-}
+require('json');
+
 var API = {};
 // get main domain
 var getDomain = function () {
@@ -13,189 +17,77 @@ var getDomain = function () {
     hostArray.splice(0, 1);
     return hostArray.join('.')
 };
-// deparms function
-var deParams = function (params, coerce) {
-    var obj = {};
-    var coerce_types = {
-        'true': !0,
-        'false': !1,
-        'null': null
-    };
-    var decode = decodeURIComponent;
-    // Iterate over all name=value pairs.
-    $.each(params.replace(/\+/g, ' ').split('&'), function (j, v) {
-        var param = v.split('='),
-            key = decode(param[0]),
-            val,
-            cur = obj,
-            i = 0,
-        // If key is more complex than 'foo', like 'a[]' or 'a[b][c]', split it
-        // into its component parts.
-            keys = key.split(']['),
-            keys_last = keys.length - 1;
-        // If the first keys part contains [ and the last ends with ], then []
-        // are correctly balanced.
-        if (/\[/.test(keys[0]) && /\]$/.test(keys[keys_last])) {
-            // Remove the trailing ] from the last keys part.
-            keys[keys_last] = keys[keys_last].replace(/\]$/, '');
-
-            // Split first keys part into two parts on the [ and add them back onto
-            // the beginning of the keys array.
-            keys = keys.shift().split('[').concat(keys);
-
-            keys_last = keys.length - 1;
-        } else {
-            // Basic 'foo' style key.
-            keys_last = 0;
-        }
-        // Are we dealing with a name=value pair, or just a name?
-        if (param.length === 2) {
-            val = decode(param[1]);
-            // Coerce values.
-            if (coerce) {
-                val = val && !isNaN(val) ? +val // number
-                    : val === 'undefined' ? undefined // undefined
-                    : coerce_types[val] !== undefined ? coerce_types[val] // true, false, null
-                    : val; // string
-            }
-            if (keys_last) {
-                // Complex key, build deep object structure based on a few rules:
-                // * The 'cur' pointer starts at the object top-level.
-                // * [] = array push (n is set to array length), [n] = array if n is
-                //   numeric, otherwise object.
-                // * If at the last keys part, set the value.
-                // * For each keys part, if the current level is undefined create an
-                //   object or array based on the type of the next keys part.
-                // * Move the 'cur' pointer to the next level.
-                // * Rinse & repeat.
-                for (; i <= keys_last; i++) {
-                    key = keys[i] === '' ? cur.length : keys[i];
-                    cur = cur[key] = i < keys_last ? cur[key] || (keys[i + 1] && isNaN(keys[i + 1]) ? {} : []) : val;
-                }
-
-            } else {
-                // Simple key, even simpler rules, since only scalars and shallow
-                // arrays are allowed.
-
-                if ($.isArray(obj[key])) {
-                    // val is already an array, so push on the next value.
-                    obj[key].push(val);
-
-                } else if (obj[key] !== undefined) {
-                    // val isn't an array, but since a second value has been specified,
-                    // convert val into an array.
-                    obj[key] = [obj[key], val];
-
-                } else {
-                    // val is a scalar.
-                    obj[key] = val;
-                }
-            }
-
-        } else if (key) {
-            // No value was defined, so set something meaningful.
-            obj[key] = coerce ? undefined : '';
-        }
-    });
-
-    return obj;
-};
 
 // get common API base
-var baseURL = config.get('commonAPI'),
-    _getURL = function (name, type) {
+var _getURL = function (scope, name, type) {
+        var baseURL = scope === 'common' ? config.get('commonAPI') : config.get('huodongAPI');
         if (name.indexOf('http') !== -1) return name.replace('.json', '.jsonp').replace('jsonpp', 'jsonp');
-        return name.indexOf('.') > 0 ? baseURL + name : baseURL + name + '.' + type;
+        return name.indexOf('.') > 0 ? baseURL + '/' + name : baseURL + '/' + name + '.' + type;
     },
-    _method = ['GET', 'POST', 'PUT', 'DEL'],
-    _request = function (options, successCallback, errorCallback) {
-        var defaultOpt = {
-            type: 'get',
-            dataType: 'jsonp',
-            data: {
-                __method: 'GET'
-            },
+    _method = ['GET', 'POST', 'PUT', 'DEL'];
+
+$.each(_method, function (index, value) {
+    var method = value.toLowerCase();
+    window.__getUid = 0;
+    API[method] = function (api, option, successCallback, errorCallback) {
+        var _this = this;
+        _this.eventCallback = {};
+        // default scope
+        _this.scope = 'common';
+        var options = {
+            context: _this,
+            type: 'GET',
             jsonp: '__c',
+            dataType: 'jsonp',
             jsonpCallback: 'request',
             success: function (data) {
                 // failure callback
                 // 对于API V2,错误值为0外的都发生了请求错误
                 if (data['error_code'] && data['error_code'] !== 0) {
-                    errorCallback && errorCallback.call(this, data);
+                    this.trigger('error', data);
+                    if (typeof option === 'function') {
+                        successCallback && successCallback.call(this, data);
+                    } else {
+                        errorCallback && errorCallback.call(this, data);
+                    }
                 } else {
-                    // success callback 
-                    successCallback && successCallback.call(this, data);
+                    this.trigger('success', data);
+                    if (typeof option === 'function') {
+                        option.call(this, data);
+                    } else {
+                        successCallback && successCallback.call(this, data);
+                    }
                 }
-            },
-            error: function (a, b, c) {
-                //alert(JSON.stringify(a),JSON.stringify(b));
-                // @todo
             }
         };
-        options.url = _getURL(options['api'], options['dataType']);
-        $.extend(defaultOpt, options);
-        var key = options['api'].replace('/', '_') + '_' + options['data']['__method'];
-        delete options['api'];
-        // 维护各个请求接口的次数
-        this[key] === undefined ? (this[key] = 1) : (this[key]++);
-        // 同一接口不允许有同一个callback名字
-        defaultOpt['jsonpCallback'] = key.replace(/\./g, '_').replace(':', '').replace(/\//g, '') + '_' + this[key];
-        if (!defaultOpt.type || $.inArray(defaultOpt.type.toLowerCase(), ['post', 'put', 'del', 'get']) === -1) {
-            defaultOpt.type = 'GET';
-        }
-        if (defaultOpt.type.toLowerCase() !== 'get') {
-            defaultOpt.type = 'POST';
-            defaultOpt.iframe = true;
-            defaultOpt.dataType = 'json';
-            defaultOpt.url = _getURL(defaultOpt['api'], 'iframe');
-        }
-        // final request
-        $.ajax(defaultOpt);
-    };
 
-// API config
-API.config = function (option) {
-    if ($.isPlainObject(option) && option.baseAPIUrl) {
-        baseURL = option.baseAPIUrl;
-    }
-    if (option === 'baseAPIUrl') {
-        return baseURL;
-    }
-};
+        // build data
+        var data = {
+            __method: 'GET'
+        };
+        if (typeof arguments[1] === 'object' || typeof arguments[1] === 'string') {
+            data = arguments[1];
+        }
+        options.data = data;
 
-$.each(_method, function (index, value) {
-    API[value.toLowerCase()] = function (api, option, successCallback, errorCallback, dataType) {
-        var data = {};
-        // 不带参数的参数顺序处理
-        if (typeof option === 'function') {
-            if (typeof successCallback === 'function') {
-                var errorCallback = successCallback;
-            }
-            successCallback = option;
+        // build dataType
+        var dataType = 'jsonp';
+        if (method === 'get') {
+            dataType = 'jsonp';
         } else {
-            // deparms the querystring
-            if (typeof option === 'string') {
-                option = deParams(option);
-            }
-            data = option;
+            dataType = 'iframe';
         }
+        // build url
+        options.url = _getURL(this.scope, api, dataType);
+        // build type
+        options.type = 'GET';
 
-        // 登录接口结束
-        $.extend(data, {
-            __method: (value === 'DEL') ? 'DELETE' : value
-        });
-        var options = {
-            api: api,
-            dataType: 'jsonp',
-            data: data
-        };
-        // override dataType
-        if (typeof arguments[arguments.length - 1] === 'string') {
-            options['dataType'] = arguments[arguments.length - 1];
+        if (method !== 'get') {
+            options.type = 'POST';
+            options.iframe = true;
+            options.dataType = 'json';
         }
-        $.extend(options, option);
-
-        if (value.toLowerCase() !== 'get') {
+        if (method !== 'get') {
             options.type = 'POST';
             // set document.domain
             var domain = getDomain();
@@ -204,9 +96,47 @@ $.each(_method, function (index, value) {
                 return;
             }
             document.domain = domain;
-
         }
-        _request(options, successCallback, errorCallback);
-    }
+
+        // build jsonpCallback
+        var key = api.replace('/', '_') + '_' + method;
+        // 维护各个请求接口的次数
+        this[key] = window.__getUid++;
+        // 同一接口不允许有同一个callback名字
+        options['jsonpCallback'] = options.url.split('/').slice(3).join('_').replace('.' + options.dataType, '').replace(/\./g, '_') + '_' + this[key];
+
+        $.ajax(options).always(function (data) {
+            this.trigger('complete', data);
+        }).fail(function () {
+                this.trigger('fail');
+            });
+        return this;
+    };
+
+    // arale-events 在这里会多次trigger,暂时不清楚原因，于是自己写了个简单的事件支持
+    // set event listener
+    API[method].prototype.on = function (event, callback) {
+        this.eventCallback[event] = this.eventCallback[event] || [];
+        this.eventCallback[event].push(callback);
+        return this;
+    };
+
+    // event trigger
+    API[method].prototype.trigger = function (event, data) {
+        $(this.eventCallback[event]).each(function (index, one) {
+            one(data);
+        });
+        return this;
+    };
 });
-module.exports = API;
+
+
+module.exports = {
+    scope: API.scope,
+    get: function (api, option, successCallback, errorCallback) {
+        return new API.get(api, option);
+    },
+    post: API.post,
+    put: API.put,
+    del: API.del
+};

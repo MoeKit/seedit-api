@@ -1,6 +1,11 @@
 # History
 
 ---
+
+## 0.0.5
+
+`CHANGED` 大重构，支持事件监听，太花时间了。。
+
 ## 0.0.4
 
 `IMPROVED` 从 `seedit-config` 模块中获取API配置
