@@ -20,7 +20,15 @@ var getDomain = function () {
 
 // get common API base
 var _getURL = function (scope, name, type) {
-        var baseURL = scope === 'common' ? config.get('commonAPI') : config.get('huodongAPI');
+        var baseURL = '';
+        console.log(scope, name, type);
+        if (/http/.test(scope)) {
+            console.log('http scope')
+            baseURL = scope;
+        } else {
+            baseURL = scope === 'common' ? config.get('commonAPI') : config.get('huodongAPI');
+        }
+
         if (name.indexOf('http') !== -1) return name.replace('.json', '.jsonp').replace('jsonpp', 'jsonp');
         return name.indexOf('.') > 0 ? baseURL + '/' + name : baseURL + '/' + name + '.' + type;
     },
@@ -30,10 +38,14 @@ $.each(_method, function (index, value) {
     var method = value.toLowerCase();
     window.__getUid = 0;
     API[method] = function (api, option, successCallback, errorCallback) {
+        console.log(arguments);
+        console.log(option);
         var _this = this;
         _this.eventCallback = {};
         // default scope
-        _this.scope = 'common';
+        _this.scope = option.scope || 'common';
+        console.log('in the method scope is ', _this.scope);
+        delete option.scope;
         var options = {
             context: _this,
             type: 'GET',
@@ -83,6 +95,10 @@ $.each(_method, function (index, value) {
         options.type = 'GET';
 
         if (method !== 'get') {
+            options.data.__method = method.toUpperCase();
+            if (method === 'del') {
+                options.data.__method = 'DELETE';
+            }
             options.type = 'POST';
             options.iframe = true;
             options.dataType = 'json';
@@ -105,8 +121,13 @@ $.each(_method, function (index, value) {
         // 同一接口不允许有同一个callback名字
         options['jsonpCallback'] = options.url.split('/').slice(3).join('_').replace('.' + options.dataType, '').replace(/\./g, '_') + '_' + this[key];
 
-        $.ajax(options).always(function (data) {
+        $.ajax(options).always(function (jqXHR, textStatus) {
             this.trigger('complete', data);
+            if (textStatus === 'timeout') {
+                this.trigger('timeout');
+            } else if (textStatus === 'abort') {
+                this.trigger('abort');
+            }
         }).fail(function () {
                 this.trigger('fail');
             });
@@ -130,13 +151,41 @@ $.each(_method, function (index, value) {
     };
 });
 
+API.scope = function (scope) {
+    console.log('scope', scope);
+    return {
+        get: function (api, option, successCallback, errorCallback) {
+            option.scope = scope;
+            return new API.get(api, option, successCallback, errorCallback);
+        },
+        post: function (api, option, successCallback, errorCallback, scope) {
+            option.scope = scope;
+            return new API.post(api, option, successCallback, errorCallback);
+        },
+        put: function (api, option, successCallback, errorCallback, scope) {
+            option.scope = scope;
+            return new API.put(api, option, successCallback, errorCallback);
+        },
+        del: function (api, option, successCallback, errorCallback) {
+            option.scope = scope;
+            return new API.del(api, option, successCallback, errorCallback, scope);
+        }
+    }
+};
+
 
 module.exports = {
     scope: API.scope,
     get: function (api, option, successCallback, errorCallback) {
-        return new API.get(api, option);
+        return new API.get(api, option, successCallback, errorCallback);
     },
-    post: API.post,
-    put: API.put,
-    del: API.del
+    post: function (api, option, successCallback, errorCallback) {
+        return new API.post(api, option, successCallback, errorCallback);
+    },
+    put: function (api, option, successCallback, errorCallback) {
+        return new API.put(api, option, successCallback, errorCallback);
+    },
+    del: function (api, option, successCallback, errorCallback) {
+        return new API.del(api, option, successCallback, errorCallback);
+    }
 };
