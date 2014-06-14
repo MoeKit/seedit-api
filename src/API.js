@@ -1,8 +1,8 @@
 // event:timeout supported
 var config = require('seedit-config');
 var APIScopes = ['common', 'huodong'];
-// deparms function
-var deParams = require('./deparams');
+// querystring
+var queryString = require('query-string');
 var jQuery = require('jquery');
 // require iframeTransport for cross-domain use
 var $ = require('iframe-ajax')(jQuery);
@@ -90,7 +90,10 @@ $.each(_method, function (index, value) {
             __method: 'GET'
         };
 
-        options.data = typeof option !== 'function' ? option : '';
+        if (typeof option === 'string') {
+            option = queryString.parse(option);
+        }
+        options.data = typeof option === 'object' ? option : {};
 
         // build dataType
         var dataType = 'jsonp';
@@ -114,7 +117,7 @@ $.each(_method, function (index, value) {
             options.iframe = true;
             options.dataType = 'json';
         }
-        if (method !== 'get') {
+        if (method !== 'DEL') {
             options.type = 'POST';
             // set document.domain
             var domain = getDomain();
