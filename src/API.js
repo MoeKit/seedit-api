@@ -1,14 +1,13 @@
 // event:timeout supported
-// 不带参数的处理
-var $ = require('jquery');
 var config = require('seedit-config');
 var APIScopes = ['common', 'huodong'];
 // deparms function
 var deParams = require('./deparams');
 // require iframeTransport for cross-domain use
-require('iframeAjax');
+var $ = require('iframeAjax')(require('jquery'));
 // for fucking ie
 require('json');
+var queryString = require('query-string');
 
 var API = {};
 // get main domain
@@ -21,9 +20,7 @@ var getDomain = function () {
 // get common API base
 var _getURL = function (scope, name, type) {
         var baseURL = '';
-        console.log(scope, name, type);
         if (/http/.test(scope)) {
-            console.log('http scope')
             baseURL = scope;
         } else {
             baseURL = scope === 'common' ? config.get('commonAPI') : config.get('huodongAPI');
@@ -38,13 +35,18 @@ $.each(_method, function (index, value) {
     var method = value.toLowerCase();
     window.__getUid = 0;
     API[method] = function (api, option, successCallback, errorCallback) {
-        console.log(arguments);
-        console.log(option);
         var _this = this;
         _this.eventCallback = {};
         // default scope
-        _this.scope = option.scope || 'common';
-        console.log('in the method scope is ', _this.scope);
+        _this.scope = option.scope;
+
+        if (typeof option === 'string' && /scope/.test(option)) {
+            var array = option.split('&');
+            var a = array.slice(-1);
+            var b = a[0].split('=')[1];
+            _this.scope = b;
+        }
+
         delete option.scope;
         var options = {
             context: _this,
@@ -77,8 +79,13 @@ $.each(_method, function (index, value) {
         var data = {
             __method: 'GET'
         };
-        if (typeof arguments[1] === 'object' || typeof arguments[1] === 'string') {
+
+        if (typeof arguments[1] === 'string') {
             data = arguments[1];
+        }
+
+        if (typeof arguments[1] === 'object') {
+            data = queryString.stringify(arguments[1]);
         }
         options.data = data;
 
@@ -111,9 +118,12 @@ $.each(_method, function (index, value) {
                 alert('必须在生产环境或者本地绑定HOST使用');
                 return;
             }
+
+            /*  if (/huodong/.test(options.url)) {
+             domain = 'office.bzdev.net';
+             }*/
             document.domain = domain;
         }
-
         // build jsonpCallback
         var key = api.replace('/', '_') + '_' + method;
         // 维护各个请求接口的次数
@@ -152,14 +162,17 @@ $.each(_method, function (index, value) {
 });
 
 API.scope = function (scope) {
-    console.log('scope', scope);
     return {
         get: function (api, option, successCallback, errorCallback) {
             option.scope = scope;
             return new API.get(api, option, successCallback, errorCallback);
         },
-        post: function (api, option, successCallback, errorCallback, scope) {
-            option.scope = scope;
+        post: function (api, option, successCallback, errorCallback) {
+            if (typeof option === 'object') {
+                option.scope = scope;
+            } else {
+                option += '&scope=' + scope;
+            }
             return new API.post(api, option, successCallback, errorCallback);
         },
         put: function (api, option, successCallback, errorCallback, scope) {
