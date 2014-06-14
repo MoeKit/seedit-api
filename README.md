@@ -2,8 +2,8 @@
 
 ---
 
-<!-- [![Build Status](https://secure.travis-ci.org/aralejs/API.png)](https://travis-ci.org/seedit/API)
-[![Coverage Status](https://coveralls.io/repos/aralejs/API/badge.png?branch=master)](https://coveralls.io/r/seedit/API) -->
+[![Build Status](https://travis-ci.org/MoeKit/seedit-api.svg)](https://travis-ci.org/MoeKit/seedit-api)
+[![Coverage Status](https://img.shields.io/coveralls/MoeKit/seedit-api.svg)](https://coveralls.io/r/MoeKit/seedit-api)
 
 
 站内`API` JavaScritp SDK 文档
