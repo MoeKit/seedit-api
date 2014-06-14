@@ -22,7 +22,6 @@
             "jquery": "1.8.3",
             "json": "0.0.2",
             "seedit-config": "0.1.1",
-            "events": "1.2.0",
             "query-string": "0.4.0",
             "iframe-ajax": "0.0.6"
         },
