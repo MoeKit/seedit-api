@@ -1,34 +1,34 @@
 {
-  "name": "seedit-api",
-  "version": "0.0.5",
-  "description": "Seedit API JavaScript SDK",
-  "homepage": "https://github.com/airyland/seedit",
-  "author": "",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/airyland/seedit.git"
-  },
-  "bugs": {
-    "url": ""
-  },
-  "keywords": [],
-  "licenses": "MIT",
-  "spm": {
-    "main": "index.js",
-    "alias": {},
-    "devAlias": {},
-    "engines": {},
-    "dependencies": {
-      "iframeAjax": "0.0.5",
-      "jquery": "1.8.3",
-      "json": "0.0.2",
-      "seedit-config": "0.1.1",
-      "events": "1.2.0",
-      "query-string": "0.4.0"
+    "name": "seedit-api",
+    "version": "0.0.5",
+    "description": "Seedit API JavaScript SDK",
+    "homepage": "https://github.com/airyland/seedit",
+    "author": "",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/airyland/seedit.git"
     },
-    "devDependencies": {
-      "seajs": "2.2.1",
-      "expect": "0.3.1"
+    "bugs": {
+        "url": ""
+    },
+    "keywords": [],
+    "licenses": "MIT",
+    "spm": {
+        "main": "index.js",
+        "alias": {},
+        "devAlias": {},
+        "engines": {},
+        "dependencies": {
+            "jquery": "1.8.3",
+            "json": "0.0.2",
+            "seedit-config": "0.1.1",
+            "events": "1.2.0",
+            "query-string": "0.4.0",
+            "iframe-ajax": "0.0.6"
+        },
+        "devDependencies": {
+            "seajs": "2.2.1",
+            "expect": "0.3.1"
+        }
     }
-  }
 }

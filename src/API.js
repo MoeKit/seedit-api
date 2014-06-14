@@ -3,8 +3,9 @@ var config = require('seedit-config');
 var APIScopes = ['common', 'huodong'];
 // deparms function
 var deParams = require('./deparams');
+var jQuery = require('jquery');
 // require iframeTransport for cross-domain use
-var $ = require('iframeAjax')(require('jquery'));
+var $ = require('iframe-ajax')(jQuery);
 // for fucking ie
 require('json');
 var queryString = require('query-string');
