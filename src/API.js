@@ -24,7 +24,17 @@ var _getURL = function (scope, name, type) {
         if (/http/.test(scope)) {
             baseURL = scope;
         } else {
-            baseURL = scope === 'common' ? config.get('commonAPI') : config.get('huodongAPI');
+            switch (scope) {
+                case 'common':
+                    baseURL = config.get('commonAPI');
+                    break;
+                case 'huodong':
+                    baseURL = config.get('huodongAPI');
+                    break;
+                default:
+                    baseURL = config.get('commonAPI');
+                    break;
+            }
         }
 
         if (name.indexOf('http') !== -1) return name.replace('.json', '.jsonp').replace('jsonpp', 'jsonp');
@@ -52,7 +62,6 @@ $.each(_method, function (index, value) {
         var options = {
             context: _this,
             type: 'GET',
-            jsonp: '__c',
             dataType: 'jsonp',
             jsonpCallback: 'request',
             success: function (data) {
@@ -81,18 +90,12 @@ $.each(_method, function (index, value) {
             __method: 'GET'
         };
 
-        if (typeof arguments[1] === 'string') {
-            data = arguments[1];
-        }
-
-        if (typeof arguments[1] === 'object') {
-            data = queryString.stringify(arguments[1]);
-        }
-        options.data = data;
+        options.data = typeof option !== 'function' ? option : '';
 
         // build dataType
         var dataType = 'jsonp';
         if (method === 'get') {
+            options.jsonp = '__c';
             dataType = 'jsonp';
         } else {
             dataType = 'iframe';
@@ -131,7 +134,7 @@ $.each(_method, function (index, value) {
         this[key] = window.__getUid++;
         // 同一接口不允许有同一个callback名字
         options['jsonpCallback'] = options.url.split('/').slice(3).join('_').replace('.' + options.dataType, '').replace(/\./g, '_') + '_' + this[key];
-
+        console.log(options.data);
         $.ajax(options).always(function (jqXHR, textStatus) {
             this.trigger('complete', data);
             if (textStatus === 'timeout') {
