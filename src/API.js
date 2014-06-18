@@ -112,24 +112,26 @@ $.each(_method, function (index, value) {
             if (method === 'del') {
                 options.data.__method = 'DELETE';
             }
+
+            if (method !== 'DEL' && method !== 'del') {
+                options.type = 'POST';
+                // set document.domain
+                var domain = getDomain();
+                if (!domain || /^\d+(.*?)\d+$/.test(domain)) {
+                    alert('必须在生产环境或者本地绑定HOST使用');
+                    return;
+                }
+
+                /*  if (/huodong/.test(options.url)) {
+                 domain = 'office.bzdev.net';
+                 }*/
+                document.domain = domain;
+            }
             options.type = 'POST';
             options.iframe = true;
             options.dataType = 'json';
         }
-        if (method !== 'DEL') {
-            options.type = 'POST';
-            // set document.domain
-            var domain = getDomain();
-            if (!domain || /^\d+(.*?)\d+$/.test(domain)) {
-                alert('必须在生产环境或者本地绑定HOST使用');
-                return;
-            }
 
-            /*  if (/huodong/.test(options.url)) {
-             domain = 'office.bzdev.net';
-             }*/
-            document.domain = domain;
-        }
         // build jsonpCallback
         var key = api.replace('/', '_') + '_' + method;
         // 维护各个请求接口的次数
