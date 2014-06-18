@@ -8,7 +8,6 @@ var jQuery = require('jquery');
 var $ = require('iframe-ajax')(jQuery);
 // for fucking ie
 require('json');
-var queryString = require('query-string');
 
 var API = {};
 // get main domain
@@ -137,7 +136,7 @@ $.each(_method, function (index, value) {
         this[key] = window.__getUid++;
         // 同一接口不允许有同一个callback名字
         options['jsonpCallback'] = options.url.split('/').slice(3).join('_').replace('.' + options.dataType, '').replace(/\./g, '_') + '_' + this[key];
-        console.log(options.data);
+
         $.ajax(options).always(function (jqXHR, textStatus) {
             this.trigger('complete', data);
             if (textStatus === 'timeout') {
