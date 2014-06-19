@@ -139,6 +139,11 @@ $.each(_method, function (index, value) {
         // 同一接口不允许有同一个callback名字
         options['jsonpCallback'] = options.url.split('/').slice(3).join('_').replace('.' + options.dataType, '').replace(/\./g, '_') + '_' + this[key];
 
+        // 补救 http://
+        if (!/^http/.test(options.url)) {
+            options.url = 'http://' + options.url;
+        }
+
         $.ajax(options).always(function (jqXHR, textStatus) {
             this.trigger('complete', data);
             if (textStatus === 'timeout') {
