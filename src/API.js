@@ -115,18 +115,17 @@ $.each(_method, function (index, value) {
 
             if (method !== 'DEL' && method !== 'del') {
                 options.type = 'POST';
-                // set document.domain
-                var domain = getDomain();
-                if (!domain || /^\d+(.*?)\d+$/.test(domain)) {
-                    alert('必须在生产环境或者本地绑定HOST使用');
-                    return;
-                }
-
                 /*  if (/huodong/.test(options.url)) {
                  domain = 'office.bzdev.net';
                  }*/
-                document.domain = domain;
             }
+            // set document.domain
+            var domain = getDomain();
+            if (!domain || /^\d+(.*?)\d+$/.test(domain)) {
+                alert('必须在生产环境或者本地绑定HOST使用');
+                return;
+            }
+            document.domain = domain;
             options.type = 'POST';
             options.iframe = true;
             options.dataType = 'json';
