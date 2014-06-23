@@ -88,25 +88,5 @@ API.get('bbs/common_member',function(data){
 ```
 
 
-## 附加
-
-公用`jQuery和seajs`地址
-
-`http://scdn.bozhong.com/source/common/js/jquery.min.js`
-
----
-
-`seajs`路径配置
-
-```javascript
- seajs.config({
-        paths: {
-            seedit: 'http://assets.spmjs.org/seedit',
-            arale: 'http://static.alipayobjects.com/arale',
-            gallery: 'http://static.alipayobjects.com/gallery',
-            moe: 'http://scdn.bozhong.com/source/moe'
-        }
-    });
-```
 
 
