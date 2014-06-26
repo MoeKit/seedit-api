@@ -27,7 +27,7 @@ describe('API', function () {
     });
 
     it('API.post options', function () {
-        var post = API.post('bbs/common_member');
+        var post = API.post('bbs/common_member', {hello: 'world', 'hello2': 'world2'});
         expect(post.options.dataType).to.be('json');
         // no jsonp option
         expect(post.options.jsonp).to.be(undefined);
@@ -38,10 +38,28 @@ describe('API', function () {
         // option.data.__method
         expect(post.options.data.__method).to.be('POST');
         expect(post.options.iframe).to.be(true);
+        expect(post.options.data.hello).to.be('world');
+        expect(post.options.data.hello2).to.be('world2');
+    });
+
+    it('API.post querystrings', function () {
+        var post = API.post('bbs/common_member', 'hello=world&hello2=world2');
+        expect(post.options.dataType).to.be('json');
+        // no jsonp option
+        expect(post.options.jsonp).to.be(undefined);
+        expect(post.options.type).to.be('POST');
+        // no jsonpCallback option
+        expect(post.options.jsonpCallback).to.be(undefined);
+        expect(post.scope).to.be('common');
+        // option.data.__method
+        expect(post.options.data.__method).to.be('POST');
+        expect(post.options.iframe).to.be(true);
+        expect(post.options.data.hello).to.be('world');
+        expect(post.options.data.hello2).to.be('world2');
     });
 
     it('API.put options', function () {
-        var put = API.put('bbs/common_member');
+        var put = API.put('bbs/common_member', {hello: 'world', 'hello2': 'world2'});
         expect(put.options.dataType).to.be('json');
         // no jsonp option
         expect(put.options.jsonp).to.be(undefined);
@@ -52,10 +70,12 @@ describe('API', function () {
         // option.data.__method
         expect(put.options.data.__method).to.be('PUT');
         expect(put.options.iframe).to.be(true);
+        expect(put.options.data.hello).to.be('world');
+        expect(put.options.data.hello2).to.be('world2');
     });
 
     it('API.del options', function () {
-        var del = API.del('bbs/common_member');
+        var del = API.del('bbs/common_member', {hello: 'world', 'hello2': 'world2'});
         expect(del.options.dataType).to.be('json');
         // no jsonp option
         expect(del.options.jsonp).to.be(undefined);
@@ -66,6 +86,8 @@ describe('API', function () {
         // option.data.__method
         expect(del.options.data.__method).to.be('DELETE');
         expect(del.options.iframe).to.be(true);
+        expect(del.options.data.hello).to.be('world');
+        expect(del.options.data.hello2).to.be('world2');
     });
 
     it('test get jsonCallback Counter', function () {
