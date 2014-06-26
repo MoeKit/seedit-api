@@ -123,25 +123,21 @@ describe('API', function () {
 
     // test scope
     it('test scope function', function () {
-        var get1 = API.scope('huodong').get('bbs/common_member');
+        var get1 = API.scope('huodong').get('shizhi/comment/list');
         expect(get1.scope).to.be('huodong');
-        expect(get1.options.url).to.be('http://huodong.seedit.com/restful/bbs/common_member.jsonp');
+        expect(get1.options.url).to.be('http://huodong.seedit.com/restful/shizhi/comment/list.jsonp');
 
         var get2 = API.scope('common').get('bbs/common_member');
         expect(get2.scope).to.be('common');
         expect(get2.options.url).to.be('http://common.seedit.com/bbs/common_member.jsonp');
 
-        var get3 = API.scope('http://dev.seedit.com').get('bbs/common_member');
-        expect(get3.scope).to.be('http://dev.seedit.com');
-        expect(get3.options.url).to.be('http://dev.seedit.com/bbs/common_member.jsonp');
+        var get5 = API.scope('http://huodong.seedit.com/restful').get('shizhi/comment/list');
+        expect(get5.scope).to.be('http://huodong.seedit.com/restful');
+        expect(get5.options.url).to.be('http://huodong.seedit.com/restful/shizhi/comment/list.jsonp');
 
-        var get4 = API.scope('http://test.seedit.com').get('bbs/common_member');
-        expect(get4.scope).to.be('http://test.seedit.com');
-        expect(get4.options.url).to.be('http://test.seedit.com/bbs/common_member.jsonp');
-
-        var get5 = API.scope('http://test.seedit.com/hello').get('bbs/common_member');
-        expect(get5.scope).to.be('http://test.seedit.com/hello');
-        expect(get5.options.url).to.be('http://test.seedit.com/hello/bbs/common_member.jsonp');
+        var get4 = API.scope('').get('bbs/common_member');
+        expect(get4.scope).to.be('common');
+        expect(get4.options.url).to.be('http://common.seedit.com/bbs/common_member.jsonp');
 
 
     });

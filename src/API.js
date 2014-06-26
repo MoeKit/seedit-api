@@ -50,10 +50,7 @@ $.each(_method, function (index, value) {
         _this.scope = 'common';
 
         if (typeof option === 'string' && /scope/.test(option)) {
-            var array = option.split('&');
-            var a = array.slice(-1);
-            var b = a[0].split('=')[1];
-            _this.scope = b;
+            _this.scope = queryString.parse(option).scope;
         } else if (typeof options === 'object') {
             _this.scope = options.scope;
             delete option.scope;
@@ -115,6 +112,10 @@ $.each(_method, function (index, value) {
 
         // build url
         options.url = _getURL(this.scope, api, dataType);
+
+        if (!this.scope) {
+            this.scope = 'common';
+        }
 
         if (method === 'get') {
             // build jsonpCallback
