@@ -64,7 +64,6 @@ $.each(_method, function (index, value) {
             context: _this,
             type: 'GET',
             dataType: 'jsonp',
-            jsonpCallback: 'request',
             success: function (data) {
                 // failure callback
                 // 对于API V2,错误值为0外的都发生了请求错误
@@ -97,29 +96,37 @@ $.each(_method, function (index, value) {
             option = queryString.parse(option);
         }
         options.data = typeof option === 'object' ? option : {};
-
-        // build dataType
-        var dataType = 'jsonp';
-        if (method === 'get') {
-            options.jsonp = '__c';
-            dataType = 'jsonp';
-        } else {
-            dataType = 'iframe';
-        }
+        var dataType = method === 'get' ? 'jsonp' : 'json';
         // build url
         options.url = _getURL(this.scope, api, dataType);
-        // build type
-        options.type = 'GET';
-
-        if (method !== 'get') {
+        // build dataType
+        if (method === 'get') {
+            options.type = 'GET';
+            options.jsonp = '__c';
+            options.dataType = 'jsonp';
+            // build jsonpCallback
+            var key = api.replace('/', '_') + '_' + method;
+            // 维护各个请求接口的次数
+            this[key] = window.__getUid++;
+            // 同一接口不允许有同一个callback名字
+            options['jsonpCallback'] = options.url.split('/').slice(3).join('_').replace('.' + options.dataType, '').replace(/\./g, '_') + '_' + this[key];
+        } else {
             options.data.__method = method.toUpperCase();
+            options.type = 'POST';
+            options.iframe = true;
+            options.dataType = 'json';
             if (method === 'del') {
                 options.data.__method = 'DELETE';
             }
+        }
 
-            if (method !== 'DEL' && method !== 'del') {
-                options.type = 'POST';
-            }
+
+        // 补救 http://
+        if (!/^http/.test(options.url)) {
+            options.url = 'http://' + options.url;
+        }
+
+        if (method !== 'get') {
             // set document.domain
             var domain = getDomain();
             if (!domain || /^\d+(.*?)\d+$/.test(domain)) {
@@ -127,21 +134,6 @@ $.each(_method, function (index, value) {
                 return _this;
             }
             document.domain = domain;
-            options.type = 'POST';
-            options.iframe = true;
-            options.dataType = 'json';
-        }
-
-        // build jsonpCallback
-        var key = api.replace('/', '_') + '_' + method;
-        // 维护各个请求接口的次数
-        this[key] = window.__getUid++;
-        // 同一接口不允许有同一个callback名字
-        options['jsonpCallback'] = options.url.split('/').slice(3).join('_').replace('.' + options.dataType, '').replace(/\./g, '_') + '_' + this[key];
-
-        // 补救 http://
-        if (!/^http/.test(options.url)) {
-            options.url = 'http://' + options.url;
         }
 
         $.ajax(options).always(function (jqXHR, textStatus) {
