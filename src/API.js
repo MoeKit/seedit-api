@@ -115,9 +115,6 @@ $.each(_method, function (index, value) {
 
             if (method !== 'DEL' && method !== 'del') {
                 options.type = 'POST';
-                /*  if (/huodong/.test(options.url)) {
-                 domain = 'office.bzdev.net';
-                 }*/
             }
             // set document.domain
             var domain = getDomain();
