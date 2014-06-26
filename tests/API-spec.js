@@ -28,6 +28,7 @@ describe('API', function () {
 
     it('API.post options', function () {
         var post = API.post('bbs/common_member', {hello: 'world', 'hello2': 'world2'});
+        expect(post.options.url).to.be('http://common.seedit.com/bbs/common_member.iframe');
         expect(post.options.dataType).to.be('json');
         // no jsonp option
         expect(post.options.jsonp).to.be(undefined);
@@ -44,6 +45,7 @@ describe('API', function () {
 
     it('API.post querystrings', function () {
         var post = API.post('bbs/common_member', 'hello=world&hello2=world2');
+        expect(post.options.url).to.be('http://common.seedit.com/bbs/common_member.iframe');
         expect(post.options.dataType).to.be('json');
         // no jsonp option
         expect(post.options.jsonp).to.be(undefined);
@@ -60,6 +62,7 @@ describe('API', function () {
 
     it('API.put options', function () {
         var put = API.put('bbs/common_member', {hello: 'world', 'hello2': 'world2'});
+        expect(put.options.url).to.be('http://common.seedit.com/bbs/common_member.iframe');
         expect(put.options.dataType).to.be('json');
         // no jsonp option
         expect(put.options.jsonp).to.be(undefined);
@@ -76,6 +79,7 @@ describe('API', function () {
 
     it('API.del options', function () {
         var del = API.del('bbs/common_member', {hello: 'world', 'hello2': 'world2'});
+        expect(del.options.url).to.be('http://common.seedit.com/bbs/common_member.iframe');
         expect(del.options.dataType).to.be('json');
         // no jsonp option
         expect(del.options.jsonp).to.be(undefined);
@@ -98,5 +102,31 @@ describe('API', function () {
         expect(get.options.jsonpCallback).to.be('bbs_common_member_1');
         expect(get.scope).to.be('common');
     });
+
+    // test scope
+    it('test scope function', function () {
+        var get1 = API.scope('huodong').get('bbs/common_member');
+        expect(get1.scope).to.be('huodong');
+        expect(get1.options.url).to.be('http://huodong.seedit.com/restful/bbs/common_member.jsonp');
+
+        var get2 = API.scope('common').get('bbs/common_member');
+        expect(get2.scope).to.be('common');
+        expect(get2.options.url).to.be('http://common.seedit.com/bbs/common_member.jsonp');
+
+        var get3 = API.scope('http://dev.seedit.com').get('bbs/common_member');
+        expect(get3.scope).to.be('http://dev.seedit.com');
+        expect(get3.options.url).to.be('http://dev.seedit.com/bbs/common_member.jsonp');
+
+        var get4 = API.scope('http://test.seedit.com').get('bbs/common_member');
+        expect(get4.scope).to.be('http://test.seedit.com');
+        expect(get4.options.url).to.be('http://test.seedit.com/bbs/common_member.jsonp');
+
+        var get5 = API.scope('http://test.seedit.com/hello').get('bbs/common_member');
+        expect(get5.scope).to.be('http://test.seedit.com/hello');
+        expect(get5.options.url).to.be('http://test.seedit.com/hello/bbs/common_member.jsonp');
+
+
+    });
+
 
 });
