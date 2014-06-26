@@ -96,20 +96,13 @@ $.each(_method, function (index, value) {
             option = queryString.parse(option);
         }
         options.data = typeof option === 'object' ? option : {};
-        var dataType = method === 'get' ? 'jsonp' : 'json';
-        // build url
-        options.url = _getURL(this.scope, api, dataType);
+        var dataType = method === 'get' ? 'jsonp' : 'iframe';
+
         // build dataType
         if (method === 'get') {
             options.type = 'GET';
             options.jsonp = '__c';
             options.dataType = 'jsonp';
-            // build jsonpCallback
-            var key = api.replace('/', '_') + '_' + method;
-            // 维护各个请求接口的次数
-            this[key] = window.__getUid++;
-            // 同一接口不允许有同一个callback名字
-            options['jsonpCallback'] = options.url.split('/').slice(3).join('_').replace('.' + options.dataType, '').replace(/\./g, '_') + '_' + this[key];
         } else {
             options.data.__method = method.toUpperCase();
             options.type = 'POST';
@@ -118,6 +111,18 @@ $.each(_method, function (index, value) {
             if (method === 'del') {
                 options.data.__method = 'DELETE';
             }
+        }
+
+        // build url
+        options.url = _getURL(this.scope, api, dataType);
+
+        if (method === 'get') {
+            // build jsonpCallback
+            var key = api.replace('/', '_') + '_' + method;
+            // 维护各个请求接口的次数
+            this[key] = window.__getUid++;
+            // 同一接口不允许有同一个callback名字
+            options['jsonpCallback'] = options.url.split('/').slice(3).join('_').replace('.' + options.dataType, '').replace(/\./g, '_') + '_' + this[key];
         }
 
 
