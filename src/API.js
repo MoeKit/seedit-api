@@ -47,16 +47,19 @@ $.each(_method, function (index, value) {
         var _this = this;
         _this.eventCallback = {};
         // default scope
-        _this.scope = option.scope;
+        _this.scope = 'common';
 
         if (typeof option === 'string' && /scope/.test(option)) {
             var array = option.split('&');
             var a = array.slice(-1);
             var b = a[0].split('=')[1];
             _this.scope = b;
+        } else if (typeof options === 'object') {
+            _this.scope = options.scope;
+            delete option.scope;
         }
 
-        delete option.scope;
+
         var options = {
             context: _this,
             type: 'GET',
@@ -82,6 +85,8 @@ $.each(_method, function (index, value) {
                 }
             }
         };
+
+        _this.options = options;
 
         // build data
         var data = {
@@ -118,8 +123,8 @@ $.each(_method, function (index, value) {
             // set document.domain
             var domain = getDomain();
             if (!domain || /^\d+(.*?)\d+$/.test(domain)) {
-                alert('必须在生产环境或者本地绑定HOST使用');
-                return;
+                console.error('必须在生产环境或者本地绑定HOST使用');
+                return _this;
             }
             document.domain = domain;
             options.type = 'POST';
@@ -166,6 +171,11 @@ $.each(_method, function (index, value) {
             one(data);
         });
         return this;
+    };
+
+    // get Options
+    API[method].prototype.getOption = function () {
+        return this.options;
     };
 });
 
