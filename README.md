@@ -1,7 +1,7 @@
 # API文档
 
 ---
-
+[![private package](http://moekit.com/privateBadge/bozhong)](http://moekit.com/package/seedit-config)
 [![Build Status](https://travis-ci.org/MoeKit/seedit-api.svg)](https://travis-ci.org/MoeKit/seedit-api)
 [![Coverage Status](http://img.shields.io/coveralls/MoeKit/seedit-api/0.0.5.svg)](https://coveralls.io/r/MoeKit/seedit-api)
 

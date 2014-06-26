@@ -142,5 +142,34 @@ describe('API', function () {
 
     });
 
+    it('test get callback function', function (done) {
+        var get = API.get('bbs/common_member', function (data) {
+            done();
+            if (/_auth/.test(document.cookie)) {
+                expect(data.uid).to.be.a('number');
+            }
+        }, function (error) {
+            done();
+            if (!/_auth/.test(document.cookie)) {
+                expect(error.error_code).to.be(1000);
+            }
+        });
+    });
+
+    it('test get callback event', function (done) {
+
+        var get = API.get('bbs/common_member').on('success',function (data) {
+            done();
+            if (/_auth/.test(document.cookie)) {
+                expect(data.uid).to.be.a('number');
+            }
+        }).on('error', function (error) {
+                done();
+                if (!/_auth/.test(document.cookie)) {
+                    expect(error.error_code).to.be(1000);
+                }
+            });
+    });
+
 
 });
