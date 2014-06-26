@@ -169,33 +169,23 @@ $.each(_method, function (index, value) {
     };
 });
 
-API.scope = function (scope) {
-    return {
-        get: function (api, option, successCallback, errorCallback) {
-            option.scope = scope;
-            return new API.get(api, option, successCallback, errorCallback);
-        },
-        post: function (api, option, successCallback, errorCallback) {
+exports.scope = function (scope) {
+    var rs = {};
+    $.each(_method, function (index, one) {
+        var method = one.toLowerCase();
+        rs[method] = function (api, option, successCallback, errorCallback) {
             if (typeof option === 'object') {
                 option.scope = scope;
             } else {
                 option += '&scope=' + scope;
             }
-            return new API.post(api, option, successCallback, errorCallback);
-        },
-        put: function (api, option, successCallback, errorCallback, scope) {
-            option.scope = scope;
-            return new API.put(api, option, successCallback, errorCallback);
-        },
-        del: function (api, option, successCallback, errorCallback) {
-            option.scope = scope;
-            return new API.del(api, option, successCallback, errorCallback, scope);
-        }
-    }
+            return new API[method](api, option, successCallback, errorCallback);
+        };
+    });
+    return rs;
 };
 
 
-exports.scope = API.scope;
 $.each(_method, function (index, one) {
     var method = one.toLowerCase();
     exports[method] = function (api, option, successCallback, errorCallback) {

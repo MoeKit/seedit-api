@@ -3,7 +3,7 @@
 ---
 
 [![Build Status](https://travis-ci.org/MoeKit/seedit-api.svg)](https://travis-ci.org/MoeKit/seedit-api)
-[![Coverage Status](https://img.shields.io/coveralls/MoeKit/seedit-api.svg)](https://coveralls.io/r/MoeKit/seedit-api)
+[![Coverage Status](http://img.shields.io/coveralls/MoeKit/seedit-api.svg)](https://coveralls.io/r/MoeKit/seedit-api)
 
 
 站内`API` JavaScritp SDK 文档
