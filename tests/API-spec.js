@@ -103,6 +103,24 @@ describe('API', function () {
         expect(get.scope).to.be('common');
     });
 
+    it('test get with complete url', function () {
+        var get = API.get('http://common.seedit.com/bbs/common_member.jsonp');
+        expect(get.options.dataType).to.be('jsonp');
+        expect(get.options.jsonp).to.be('__c');
+        expect(get.options.type).to.be('GET');
+        expect(get.options.jsonpCallback).to.be('bbs_common_member_2');
+        expect(get.scope).to.be('common');
+    });
+
+    it('test get with complete url and json format', function () {
+        var get = API.get('http://common.seedit.com/bbs/common_member.json');
+        expect(get.options.dataType).to.be('jsonp');
+        expect(get.options.jsonp).to.be('__c');
+        expect(get.options.type).to.be('GET');
+        expect(get.options.jsonpCallback).to.be('bbs_common_member_3');
+        expect(get.scope).to.be('common');
+    });
+
     // test scope
     it('test scope function', function () {
         var get1 = API.scope('huodong').get('bbs/common_member');
