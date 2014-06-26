@@ -51,8 +51,8 @@ $.each(_method, function (index, value) {
 
         if (typeof option === 'string' && /scope/.test(option)) {
             _this.scope = queryString.parse(option).scope;
-        } else if (typeof options === 'object') {
-            _this.scope = options.scope;
+        } else if (typeof option === 'object') {
+            _this.scope = option.scope;
             delete option.scope;
         }
 
