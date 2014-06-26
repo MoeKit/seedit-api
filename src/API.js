@@ -195,18 +195,10 @@ API.scope = function (scope) {
 };
 
 
-module.exports = {
-    scope: API.scope,
-    get: function (api, option, successCallback, errorCallback) {
-        return new API.get(api, option, successCallback, errorCallback);
-    },
-    post: function (api, option, successCallback, errorCallback) {
-        return new API.post(api, option, successCallback, errorCallback);
-    },
-    put: function (api, option, successCallback, errorCallback) {
-        return new API.put(api, option, successCallback, errorCallback);
-    },
-    del: function (api, option, successCallback, errorCallback) {
-        return new API.del(api, option, successCallback, errorCallback);
-    }
-};
+exports.scope = API.scope;
+$.each(_method, function (index, one) {
+    var method = one.toLowerCase();
+    exports[method] = function (api, option, successCallback, errorCallback) {
+        return new API[method](api, option, successCallback, errorCallback);
+    };
+});
