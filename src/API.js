@@ -1,6 +1,5 @@
 // event:timeout supported
 var config = require('seedit-config');
-var APIScopes = ['common', 'huodong'];
 // querystring
 var queryString = require('query-string');
 var jQuery = require('jquery');
