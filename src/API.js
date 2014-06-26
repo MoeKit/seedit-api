@@ -170,11 +170,6 @@ $.each(_method, function (index, value) {
         });
         return this;
     };
-
-    // get Options
-    API[method].prototype.getOption = function () {
-        return this.options;
-    };
 });
 
 exports.scope = function (scope) {
