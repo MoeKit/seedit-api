@@ -59,6 +59,10 @@ $.each(_method, function (index, value) {
             context: _this,
             type: 'GET',
             dataType: 'jsonp',
+            error: function (jqXHR, textStatus) {
+                // "timeout", "error", "abort", and "parsererror"
+                this.trigger(textStatus, {error_code: -1, error_message: '抱歉，请求出现问题，请重试。错误:' + textStatus});
+            },
             success: function (data) {
                 // failure callback
                 // 对于API V2,错误值为0外的都发生了请求错误
@@ -147,16 +151,7 @@ $.each(_method, function (index, value) {
     // send
     API[method].prototype.send = function () {
         var _this = this;
-        $.ajax(_this.options).always(function (jqXHR, textStatus) {
-            this.trigger('complete');
-            if (textStatus === 'timeout') {
-                this.trigger('timeout');
-            } else if (textStatus === 'abort') {
-                this.trigger('abort');
-            }
-        }).fail(function () {
-                this.trigger('fail');
-            });
+        $.ajax(_this.options);
         return this;
     };
 
