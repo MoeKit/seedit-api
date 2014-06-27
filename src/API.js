@@ -1,10 +1,8 @@
-// event:timeout supported
-var config = require('seedit-config');
-// querystring
-var queryString = require('query-string');
-var jQuery = require('jquery');
+var config = require('seedit-config'),
+    queryString = require('query-string'),
+    jQuery = require('jquery'),
 // require iframeTransport for cross-domain use
-var $ = require('iframe-ajax')(jQuery);
+    $ = require('iframe-ajax')(jQuery);
 // for fucking ie
 require('json');
 
@@ -141,9 +139,16 @@ $.each(_method, function (index, value) {
             }
             document.domain = domain;
         }
+        // send request
+        this.send();
+        return this;
+    };
 
-        $.ajax(options).always(function (jqXHR, textStatus) {
-            this.trigger('complete', data);
+    // send
+    API[method].prototype.send = function () {
+        var _this = this;
+        $.ajax(_this.options).always(function (jqXHR, textStatus) {
+            this.trigger('complete');
             if (textStatus === 'timeout') {
                 this.trigger('timeout');
             } else if (textStatus === 'abort') {
