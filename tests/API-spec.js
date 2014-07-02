@@ -139,7 +139,9 @@ describe('API', function () {
         expect(get4.scope).to.be('common');
         expect(get4.options.url).to.be('http://common.seedit.com/bbs/common_member.jsonp');
 
-
+        // test current scope
+        var get5 = API.scope('./restful').get('hello/world');
+        expect(get5.scope).to.be('http://'+document.location.host+'/restful');
     });
 
     it('test get callback function', function (done) {

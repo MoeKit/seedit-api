@@ -112,6 +112,11 @@ $.each(_method, function (index, value) {
             }
         }
 
+        // relative scope
+        if (/\.\//.test(this.scope)) {
+            this.scope = 'http://' + document.location.host + '/' + this.scope.replace('./', '');
+        }
+
         // build url
         options.url = _getURL(this.scope, api, dataType);
 
