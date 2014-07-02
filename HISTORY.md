@@ -6,6 +6,8 @@
 
 `CHANGED` 大重构，支持事件监听，太花时间了。。
 
+`IMPROVED` 支持相对路径的`scope`参数
+
 ## 0.0.4
 
 `IMPROVED` 从 `seedit-config` 模块中获取API配置
