@@ -19,9 +19,9 @@
 
 `POST`请求将提交到`iframe`处理
 
-## 方法说明
+## API 方法说明
 
-`API`主要只有`4`个请求方法。
+`API`主要只有`4`个请求方法。默认请求的是`common`API。要请求其他域的请看后面说明。
 
 
 ### API.verb(API,[data],successCallback,errorCallback)
@@ -59,13 +59,30 @@ verb为`REST`基本的四个方法:
 
 注意：`交互考虑，必须必须有errorCallback回调`
 
-----
+## API.scope
 
+该函数返回上面四个方法，用于定义API scope,即API域 。
 
-### API.config(Object option);
-`0.0.4版本`后新增加配置方法。可用选项有
+后面再调用get等方法时，基地址将由scope决定。
 
-+ `baseAPIUrl` 如 `http://common.seedit.dev/`
+scope可取值有：
+
++ `common`  common API
+
++ `huodong`  活动 API
+
++ `./path`  相对当前网站路径，
+
+    当前url为`http://account.seedit.com/`时，使用 `API.scope('./restful')`,那么所有API的基地址是 `http://account.seedit.com/restful`
+
++ `绝对地址`  不建议使用，仅用于调试
+```javascript
+var huodongAPI = API.scope('huodong');
+// 请求试纸数据
+huodongAPI.get('shizhi/list',function(data){
+    // 请求成功啦
+});
+```
 
 
 ## 举例
