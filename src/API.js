@@ -11,7 +11,7 @@ var API = {};
 var getDomain = function () {
     var hostArray = document.location.host.split('.');
     hostArray.splice(0, 1);
-    return hostArray.join('.')
+    return hostArray.join('.').replace(/:\d+$/,'');
 };
 
 // get common API base

@@ -13,6 +13,12 @@
 
 ---
 
+## 模块中使用
+
+```javascript
+var API = require('index');
+```
+
 ## 实现说明
 
 `GET`请求统一为`jsonp`请求
