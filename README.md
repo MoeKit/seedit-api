@@ -11,6 +11,8 @@
 
 对于`POST`跨域的问题，使用`iframeAjax`进行了处理封装。
 
+该模块依赖于`seedit-config`屏蔽了不同环境下的url差异。
+
 ---
 
 ## 模块中使用
@@ -60,6 +62,27 @@ verb为`REST`基本的四个方法:
     ```json
     {error_code:1006,error_message:'出错啦'}
     ```
+    
+---
+
+### 事件
+
+请求的回调还可以写成事件的形式：
+
++ `success` 成功
++ `error` 失败
+
+原来代码：
+
+```javascript
+API.verb(API,[data],successCallback,errorCallback)
+```
+
+可以写成
+
+```javascript
+API.verb(API,[data]).on('success',successCallback).on('error',errorCallback);
+```
 
 ----
 
