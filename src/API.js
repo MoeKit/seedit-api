@@ -22,13 +22,13 @@ var _getURL = function (scope, name, type) {
         } else {
             switch (scope) {
                 case 'common':
-                    baseURL = config.get('commonAPI');
+                    baseURL = config.getSiteUrl('common');
                     break;
                 case 'huodong':
                     baseURL = config.get('huodongAPI');
                     break;
                 default:
-                    baseURL = config.get('commonAPI');
+                    baseURL = config.getSiteUrl('common');
                     break;
             }
         }
