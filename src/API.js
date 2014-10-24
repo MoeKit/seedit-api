@@ -9,6 +9,9 @@ require('json');
 var API = {};
 // get main domain
 var getDomain = function () {
+    if(/http:\/\/bozhong.com/.test(location.href)){
+        return 'bozhong.com';
+    }
     var hostArray = document.location.host.split('.');
     hostArray.splice(0, 1);
     return hostArray.join('.').replace(/:\d+$/,'');
