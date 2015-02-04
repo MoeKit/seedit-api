@@ -30,6 +30,9 @@ var _getURL = function (scope, name, type) {
                 case 'huodong':
                     baseURL = config.get('huodongAPI');
                     break;
+                case 'bbs':
+                    baseURL = config.getSiteUrl('bbs')+'/restful';
+                    break;
                 default:
                     baseURL = config.getSiteUrl('common');
                     break;

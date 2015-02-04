@@ -18,7 +18,7 @@
 ## 模块中使用
 
 ```javascript
-var API = require('index');
+var API = require('seedit-api');
 ```
 
 ## 实现说明
@@ -99,6 +99,17 @@ scope可取值有：
 + `common`  common API
 
 + `huodong`  活动 API
+
++ `bbs` bbs API
+
+  对于`http://bbs.office.bzdev.net/restful/newyear/post.json`这样的接口，可以用 
+
+  ```javascript
+  var bbsAPI = APICore.scope('bbs');
+  bbsAPI.get('newyear/post').on('success',function(data){
+  //
+  });
+  ```
 
 + `./path`  相对当前网站路径，
 
