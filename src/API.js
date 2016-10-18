@@ -120,7 +120,7 @@ $.each(_method, function (index, value) {
 
         // relative scope
         if (/\.\//.test(this.scope)) {
-            this.scope = 'http://' + document.location.host + '/' + this.scope.replace('./', '');
+            this.scope = '//' + document.location.host + '/' + this.scope.replace('./', '');
         }
 
         // build url
@@ -140,9 +140,9 @@ $.each(_method, function (index, value) {
         }
 
 
-        // 补救 http://
+        // 补救 http
         if (!/^http/.test(options.url)) {
-            options.url = 'http://' + options.url;
+            options.url = '//' + options.url;
         }
 
         if (method !== 'get') {

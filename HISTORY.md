@@ -2,6 +2,10 @@
 
 ---
 
+## 0.0.6
+
+`FIXED` 引入seedit-config@0.1.3，移除http头，使之支持https
+
 ## 0.0.5
 
 `CHANGED` 大重构，支持事件监听，太花时间了。。
