@@ -20,7 +20,7 @@ var getDomain = function () {
 // get common API base
 var _getURL = function (scope, name, type) {
         var baseURL = '';
-        if (/http/.test(scope)) {
+        if (/\/\//.test(scope)) {
             baseURL = scope;
         } else {
             switch (scope) {
@@ -38,8 +38,8 @@ var _getURL = function (scope, name, type) {
                     break;
             }
         }
-
-        if (name.indexOf('http') !== -1) return name.replace('.json', '.jsonp').replace('jsonpp', 'jsonp');
+        
+        if (name.indexOf('\/\/') !== -1) return name.replace('.json', '.jsonp').replace('jsonpp', 'jsonp');
         return name.indexOf('.') > 0 ? baseURL + '/' + name : baseURL + '/' + name + '.' + type;
     },
     _method = ['GET', 'POST', 'PUT', 'DEL'];
