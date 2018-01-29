@@ -16,11 +16,11 @@ var getDomain = function () {
     hostArray.splice(0, 1);
     return hostArray.join('.').replace(/:\d+$/,'');
 };
-
 // get common API base
 var _getURL = function (scope, name, type) {
         var baseURL = '';
-        if (/\/\//.test(scope)) {
+
+        if (/http/.test(scope)) {
             baseURL = scope;
         } else {
             switch (scope) {
@@ -38,8 +38,8 @@ var _getURL = function (scope, name, type) {
                     break;
             }
         }
-        
-        if (name.indexOf('\/\/') !== -1) return name.replace('.json', '.jsonp').replace('jsonpp', 'jsonp');
+        baseURL = window.location.protocol + baseURL.replace('http://', '//').replace('https://', '//')
+        if (name.indexOf('http') !== -1) return name.replace('.json', '.jsonp').replace('jsonpp', 'jsonp');
         return name.indexOf('.') > 0 ? baseURL + '/' + name : baseURL + '/' + name + '.' + type;
     },
     _method = ['GET', 'POST', 'PUT', 'DEL'];
@@ -117,11 +117,11 @@ $.each(_method, function (index, value) {
                 options.data.__method = 'DELETE';
             }
         }
-
         // relative scope
         if (/\.\//.test(this.scope)) {
-            this.scope = '//' + document.location.host + '/' + this.scope.replace('./', '');
+            this.scope = window.location.protocol + '//' + document.location.host + '/' + this.scope.replace('./', '');
         }
+
 
         // build url
         options.url = _getURL(this.scope, api, dataType);
